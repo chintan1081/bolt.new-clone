@@ -8,19 +8,21 @@ import axios from "axios";
 
 export default function Code() {
     const searchParams = useSearchParams();
-    const prompt = searchParams.get("prompt");        
+    const prompt = searchParams.get("prompt");    
+    console.log(prompt);
+        
     const [copied, setCopied] = useState(false);
     const [generatedCode, setGeneratedCode] = useState('')
     useEffect( () => {
         try {
             axios.post('/api/chat', {prompt : prompt} )
-            .then( response => setGeneratedCode(response.data) )
+            .then( response => setGeneratedCode(response.data.msg.text) )
         } catch (error) {
             console.log(error);
         }
-    }, []);
+    }, [prompt]);
 
-    console.log(generatedCode.msg);
+    console.log(generatedCode);
     
 
       const handleCopy = () => {
@@ -33,7 +35,7 @@ export default function Code() {
             <div className="max-w-6xl mx-auto p-6 bg-card dark:bg-gray-800 rounded-lg shadow-lg">
                 <div className="flex items-center justify-between mb-4">
                     <h2 className="text-3xl font-bold">Generated Code</h2>
-                    <CopyToClipboard text={generatedCode.msg} onCopy={handleCopy}>
+                    <CopyToClipboard text={generatedCode} onCopy={handleCopy}>
                         <button
                             className="px-4 py-2 bg-primary dark:bg-yellow-500 text-primary-foreground dark:text-black rounded-lg flex items-center hover:bg-primary/90 dark:hover:bg-yellow-600 transition-colors"
                         >
@@ -43,12 +45,12 @@ export default function Code() {
                     </CopyToClipboard>
                 </div>
 
-                <div className="overflow-auto text-muted-foreground dark:text-gray-400 mb-4">
-                    <strong>Prompt:</strong> {JSON.parse(prompt)[2]}
+                <div className="overflow-auto    text-muted-foreground dark:text-gray-400 mb-4">
+                    <strong>Prompt:</strong> {typeof(prompt) == 'string' ? JSON.parse(prompt)[2] : '' }
                 </div>
 
                 <pre className="overflow-auto bg-gray-800 dark:bg-gray-700 text-white p-4 rounded-lg">
-                    <code>{generatedCode.msg}</code>
+                    <code>{generatedCode}</code>
                 </pre>
             </div>
         </div>

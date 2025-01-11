@@ -1,24 +1,23 @@
 import Anthropic from "@anthropic-ai/sdk";
 import { NextRequest, NextResponse } from "next/server";
 import { getSystemPrompt } from "../prompts/prompt";
-import { log } from "console";
-
-
 
 export async function POST( req : NextRequest) {
-    
+  const {prompt} = await req.json();
   const client = new Anthropic({
     apiKey: process.env.claudeApiKey,
   });
-
-  const {prompt} = await req.json();
+  type Message = {
+    role: string;
+    content: string;
+  };
+  
   const responce = await client.messages.create({
-    messages : JSON.parse(prompt).map( content => ({ role : 'user', content })),
+    messages: JSON.parse(prompt).map((content: string): Message => ({ role: 'user', content })),
     model: 'claude-3-5-sonnet-20241022',
-    max_tokens: 8000,
+    max_tokens: 100,
     system: getSystemPrompt()
   })
-  const answer = responce.content[0].text;
-  console.log(answer);
+    const answer = responce.content[0];
   return NextResponse.json({ msg : answer})
 }

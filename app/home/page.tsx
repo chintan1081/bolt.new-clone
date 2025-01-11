@@ -27,7 +27,7 @@ export default function Home() {
           </div>
           <h1 className="text-4xl font-bold mb-4">Website Builder AI</h1>
           <p className="text-muted-foreground dark:text-gray-400 mb-8">
-            Describe your dream website, and we'll generate the code for you.
+            Describe your dream website, and we will generate the code for you.
           </p>
 
           <form onSubmit={handleSubmit} className="space-y-4">
